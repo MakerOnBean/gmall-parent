@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cloud.makeronbean.gmall.product.mapper.BaseTrademarkMapper">
+
+    <!--List<BaseTrademark> findTrademarkList(Integer category3Id);-->
+    <select id="findTrademarkList" resultType="cloud.makeronbean.gmall.model.product.BaseTrademark">
+        select bt.id, bt.tm_name, bt.logo_url, bt.create_time, bt.update_time, bt.is_deleted
+        from base_category_trademark bct
+            join base_trademark bt
+                on bct.trademark_id = bt.id
+        where bct.category3_id = #{category3Id} and bct.is_deleted = 0 and bt.is_deleted = 0
+        order by bt.id;
+    </select>
+</mapper>

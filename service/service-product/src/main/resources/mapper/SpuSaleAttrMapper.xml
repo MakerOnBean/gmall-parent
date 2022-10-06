@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cloud.makeronbean.gmall.product.mapper.SpuSaleAttrMapper">
+
+    <resultMap id="spuSaleAttr"
+               type="cloud.makeronbean.gmall.model.product.SpuSaleAttr"
+               autoMapping="true">
+        <id column="id" property="id"/>
+
+        <collection property="spuSaleAttrValueList"
+                    ofType="cloud.makeronbean.gmall.model.product.SpuSaleAttrValue"
+                    autoMapping="true">
+            <id column="ssav_id" property="id"/>
+        </collection>
+
+    </resultMap>
+
+    <!--List<SpuSaleAttr> getSpuSaleAttrList(Long spuId);-->
+    <select id="getSpuSaleAttrList" resultMap="spuSaleAttr">
+        select ssa.id,
+               ssa.spu_id,
+               ssa.base_sale_attr_id,
+               ssa.sale_attr_name,
+               ssav.id ssav_id,
+               ssav.sale_attr_value_name
+        from spu_sale_attr ssa
+                 join spu_sale_attr_value ssav
+                      on ssa.spu_id = ssav.spu_id and ssa.base_sale_attr_id = ssav.base_sale_attr_id
+        where ssa.spu_id = #{spuId} and ssa.is_deleted = 0 and ssav.is_deleted = 0;
+    </select>
+</mapper>

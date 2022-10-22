@@ -24,6 +24,12 @@
             <version>8.2.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>cloud.makeronbean.gmall</groupId>
+            <artifactId>rabbit-util</artifactId>
+            <version>1.0</version>
+        </dependency>
+
     </dependencies>
 
 </project>

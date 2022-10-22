@@ -40,4 +40,30 @@
         </where>
         order by bai.category_level, bai.id;
     </select>
+
+
+
+    <!--List<BaseAttrInfo> getAttrList(Long skuId);-->
+    <!--
+        # 数据来源： base_attr_info  base_attr_value  sku_attr_value
+        # 对应关系： 一 base_attr_info 对 base_attr_value 多
+        # 关系维护： base_attr_info.id = base_attr_value.attr_id
+        # 查询条件： skuId
+    -->
+    <select id="getAttrList" resultMap="baseAttrInfoMap">
+        select
+            bai.id,
+            bai.attr_name,
+            bai.category_id,
+            bai.category_level,
+            bav.id attr_value_id,
+            bav.value_name,
+            bav.attr_id
+        from base_attr_info bai
+                 join base_attr_value bav
+                      on bai.id = bav.attr_id
+                 join sku_attr_value sav
+                      on bai.id = sav.attr_id and bav.id = sav.value_id
+        where sav.sku_id = #{skuId} and bai.is_deleted = 0 and bav.is_deleted = 0 and sav.is_deleted = 0;
+    </select>
 </mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cloud.makeronbean.gmall.product.mapper.SkuSaleAttrValueMapper">
+    <!--Map<Object, Object> getSkuValueIdsMap(String spuId);-->
+    <!--
+        # 步骤一：分组
+        # 步骤二：分组前提下实现对每一组中指定字段值的拼接
+        # group_concat:
+        #   参数一：拼接的字段
+        #   参数二：排序
+        #   参数三：分隔符
+    -->
+    <select id="getSkuValueIdsMap" resultType="java.util.Map">
+        select group_concat(skav.sale_attr_value_id order by spav.base_sale_attr_id asc separator '|') as value_ids,
+               skav.sku_id
+        from sku_sale_attr_value skav
+                 join spu_sale_attr_value spav
+                      on skav.sale_attr_value_id = spav.id
+        where skav.spu_id = #{spuId} and skav.is_deleted = 0 and spav.is_deleted = 0
+        group by sku_id
+    </select>
+</mapper>

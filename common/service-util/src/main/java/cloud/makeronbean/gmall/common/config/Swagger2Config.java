@@ -24,7 +24,7 @@ import java.util.List;
 @EnableSwagger2
 public class Swagger2Config {
 
-    //@Bean
+    @Bean
     public Docket webApiConfig() {
 
         //添加head参数start

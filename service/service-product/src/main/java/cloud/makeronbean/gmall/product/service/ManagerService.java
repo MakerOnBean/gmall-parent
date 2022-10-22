@@ -1,9 +1,12 @@
 package cloud.makeronbean.gmall.product.service;
 
 import cloud.makeronbean.gmall.model.product.*;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author makeronbean
@@ -86,4 +89,56 @@ public interface ManagerService {
      * 商品下架
      */
     void cancelSale(Long skuId);
+
+    /**
+     * 根据skuId查询带图片列表的SpuInfo信息
+     */
+    SkuInfo getSkuInfo(Long skuId);
+
+    /**
+     * 根据三级分类id获取分类信息
+     */
+    BaseCategoryView getCategoryView(Long category3Id);
+
+
+    /**
+     * 根据skuId查询商品价格
+     */
+    BigDecimal getSkuPrice(Long skuId);
+
+    /**
+     * 根据spuId，skuId 查询销售属性集合
+     */
+    List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(Long skuId, Long spuId);
+
+    /**
+     * 根据spuId获取销售属性值id与skuId组成的数据集
+     */
+    Map<Object, Object> getSkuValueIdsMap(Long spuId);
+
+    /**
+     * 根据spuId获取海报数据
+     */
+    List<SpuPoster> findSpuPosterBySpuId(Long spuId);
+
+    /**
+     * 根据skuId查询平台属性
+     */
+    List<BaseAttrInfo> getAttrList(Long skuId);
+
+    /**
+     * 重制布隆过滤器
+     */
+    void remakeBloomFilter();
+
+    /**
+     * 查询所有三级分类id
+     * 首页显示使用
+     */
+    List<JSONObject> getBaseCategoryList();
+
+    /**
+     * 根据品牌id获取品牌属性
+     */
+    BaseTrademark getTrademark(Long tmId);
 }

@@ -11,6 +11,22 @@ import java.util.Date;
 import java.util.List;
 
 // Index = goods , Type = info  es 7.8.0 逐渐淡化type！  修改！
+
+/**
+ * 注解解释：
+ *  @Document：指定一个索引库
+ *      indexName：索引库名称
+ *      shards：主分片数量
+ *      replicas副本数量
+ *
+ * @Id：文档的主键
+ *
+ * @Field：文档的字段
+ *      type：字段的类型（Keyword不分词，Text会分词）
+ *      index：是否创建索引
+ *      analyzer：索引时使用的分词器，一般使用细粒度的 ik_max_word
+ *      searchAnalyzer：搜索时使用的分词器，一般使用粗粒度的 ik_smart
+ */
 @Data
 @Document(indexName = "goods" , shards = 3,replicas = 2)
 public class Goods {
@@ -22,7 +38,7 @@ public class Goods {
     private String defaultImg;
 
     //  es 中能分词的字段，这个字段数据类型必须是 text！keyword 不分词！
-    @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
     private String title;
 
     @Field(type = FieldType.Double)

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cloud.makeronbean.gmall.order.mapper.OrderInfoMapper">
+
+
+    <!--方法1：连表查询-->
+    <!-- 有bug 分页是按照聚合之前分的，造成页数不匹配 -->
+<!--    <resultMap id="orderInfoMap" type="cloud.makeronbean.gmall.model.order.OrderInfo" autoMapping="true">
+        <id column="id" property="id"/>
+        <collection property="orderDetailList" ofType="cloud.makeronbean.gmall.model.order.OrderDetail" autoMapping="true">
+            <id column="detail_id" property="id"/>
+        </collection>
+    </resultMap>
+
+    <sql id="orderResult">
+            oi.id,
+            oi.consignee,
+            oi.consignee_tel,
+            oi.total_amount,
+            oi.order_status,
+            oi.user_id,
+            oi.payment_way,
+            oi.delivery_address,
+            oi.order_comment,
+            oi.out_trade_no,
+            oi.trade_body,
+            oi.create_time,
+            oi.expire_time,
+            oi.process_status,
+            od.id detail_id,
+            od.order_id,
+            od.sku_id,
+            od.sku_name,
+            od.img_url,
+            od.order_price,
+            od.sku_num,
+            od.create_time
+    </sql>
+
+    &lt;!&ndash; IPage<OrderInfo> getOrderPage(IPage<OrderInfo> page,
+                                       @Param("userId") Long userId); &ndash;&gt;
+    <select id="getOrderPage" resultMap="orderInfoMap">
+        select
+            <include refid="orderResult"/>
+        from order_info oi
+                 join order_detail od
+                      on oi.id = od.order_id
+        where oi.user_id = #{userId}
+          and oi.is_deleted = 0
+          and od.is_deleted = 0
+          and oi.order_status not in ('SPLIT','CLOSED')
+        order by oi.id desc
+    </select>-->
+
+    <!--方法2：子查询-->
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="orderColumns">
+        id,consignee,consignee_tel,total_amount,order_status,user_id,payment_way,delivery_address,order_comment,out_trade_no,trade_body,create_time,expire_time,process_status,tracking_no,parent_order_id,img_url
+    </sql>
+
+    <sql id="orderDetailColumns">
+        id,order_id,sku_id,sku_name,img_url,order_price,sku_num,create_time,source_type,source_id,split_total_amount,split_activity_amount,split_coupon_amount
+    </sql>
+    
+    <resultMap id="orderInfoResult" type="cloud.makeronbean.gmall.model.order.OrderInfo" autoMapping="true">
+        <id column="id" property="id"/>
+        <collection property="orderDetailList"
+                    ofType="cloud.makeronbean.gmall.model.order.OrderDetail"
+                    column="{orderId = id}"
+                    select="getOrderDetail"
+                    autoMapping="true"/>
+
+    </resultMap>
+
+    <select id="getOrderPage" resultMap="orderInfoResult">
+        select
+        <include refid="orderColumns"/>
+        from order_info
+        <where>
+            and user_id = #{userId}
+            and is_deleted = 0
+            and order_status not in ('SPLIT','CLOSED')
+            <if test="orderStatus != null and orderStatus != ''">
+                and order_status = #{orderStatus}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="getOrderDetail" resultType="cloud.makeronbean.gmall.model.order.OrderDetail">
+        select <include refid="orderDetailColumns"/>
+            from order_detail
+        where is_deleted = 0
+            and order_id = #{orderId}
+        order by id
+    </select>
+
+    <!--OrderInfo getOrderInfo(Long orderId);-->
+    <select id="getOrderInfo" resultMap="orderInfoResult">
+        select <include refid="orderColumns"/>
+            from order_info
+        where id = #{orderId}
+    </select>
+    <!--join order_detail od-->
+    <!--on oi.id = od.order_id-->
+
+</mapper>

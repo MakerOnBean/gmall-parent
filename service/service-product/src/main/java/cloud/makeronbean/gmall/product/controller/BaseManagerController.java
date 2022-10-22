@@ -84,4 +84,15 @@ public class BaseManagerController {
     }
 
 
+    /**
+     * 重制布隆过滤器
+     * 临时接口，后期看情况进行更改
+     */
+    @GetMapping("/remakeBloomFilter")
+    public Result remakeBloomFilter(){
+        managerService.remakeBloomFilter();
+        return Result.ok();
+    }
+
+
 }

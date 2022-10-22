@@ -10,7 +10,7 @@
         <collection property="spuSaleAttrValueList"
                     ofType="cloud.makeronbean.gmall.model.product.SpuSaleAttrValue"
                     autoMapping="true">
-            <id column="ssav_id" property="id"/>
+            <id column="sale_attr_value_id" property="id"/>
         </collection>
 
     </resultMap>
@@ -21,11 +21,30 @@
                ssa.spu_id,
                ssa.base_sale_attr_id,
                ssa.sale_attr_name,
-               ssav.id ssav_id,
+               ssav.id sale_attr_value_id,
                ssav.sale_attr_value_name
         from spu_sale_attr ssa
                  join spu_sale_attr_value ssav
                       on ssa.spu_id = ssav.spu_id and ssa.base_sale_attr_id = ssav.base_sale_attr_id
         where ssa.spu_id = #{spuId} and ssa.is_deleted = 0 and ssav.is_deleted = 0;
+    </select>
+
+    <!--List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(@Param("skuId") String skuId, @Param("spuId") String spuId);-->
+    <select id="getSpuSaleAttrListCheckBySku" resultMap="spuSaleAttr">
+        select
+            ssa.id,
+            ssa.spu_id,
+            ssa.base_sale_attr_id,
+            ssa.sale_attr_name,
+            ssav.id as sale_attr_value_id,
+            ssav.sale_attr_value_name,
+            IF((skav.sku_id is null),0,1) as is_checked
+        from spu_sale_attr ssa
+                 join spu_sale_attr_value ssav
+                      on ssa.spu_id = ssav.spu_id and ssa.base_sale_attr_id = ssav.base_sale_attr_id
+                 left join sku_sale_attr_value skav
+                           on ssav.id = skav.sale_attr_value_id and skav.sku_id = #{skuId}
+        where ssa.spu_id = #{spuId} and ssa.is_deleted = 0 and ssav.is_deleted = 0
+        order by ssa.base_sale_attr_id,ssav.id
     </select>
 </mapper>

@@ -24,8 +24,10 @@ import java.time.Duration;
  * Redis配置类
  */
 @Configuration
+// 开启缓存
 @EnableCaching
 public class RedisConfig {
+    // 声明模板
     // 声明模板
     /*
     ref = 表示引用

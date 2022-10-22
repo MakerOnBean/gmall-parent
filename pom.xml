@@ -9,7 +9,10 @@
         <module>common</module>
         <module>model</module>
         <module>service</module>
-        <module>service-gateway</module>
+        <module>server-gateway</module>
+        <module>service-client</module>
+        <module>web</module>
+        <module>ware-manage</module>
     </modules>
     <!--引入spring boot 父工程-->
     <parent>

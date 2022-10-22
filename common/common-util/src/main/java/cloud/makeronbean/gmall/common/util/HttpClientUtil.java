@@ -13,7 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- * HttpClient类 微信：
+ * HttpClient类
  *
  */
 public class HttpClientUtil {

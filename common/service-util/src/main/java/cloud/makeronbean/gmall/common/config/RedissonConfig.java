@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * redisson配置信息
+ * @author makeronbean
  */
 @Data
 @Configuration
